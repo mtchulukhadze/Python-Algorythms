@@ -1,0 +1,20 @@
+def RainFunction(cloudy, bayesian_networ):
+    if cloudy:
+        return bayesian_networ["Rain"]["Prob_Given_Cloud"]
+    else:
+        return bayesian_networ["Rain"]["Prob_Given_Not_Cloudy"]
+
+
+cloudy = False
+bayesian_networ = {
+    "Cloudy": {
+        "Prob": 0.5,
+        "Children": ["Rain"]
+    },
+    "Rain": {
+        "Prob_Given_Cloud": 0.8,
+        "Prob_Given_Not_Cloudy": 0.2
+    }
+}
+
+print(RainFunction(cloudy, bayesian_networ))
