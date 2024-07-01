@@ -1,0 +1,48 @@
+class Session:
+    def __init__(self, name, speaker, topic, room, preferred_slot):
+        self.name = name
+        self.speaker = speaker
+        self.topic = topic
+        self.room = room
+        self.preferred_slot = preferred_slot
+        self.assigned_slot = None
+
+sessions = [
+    Session("Machine Learning Trends", "Alice", "Machine Learning", "Hall A", "Morning"),
+    Session("Data Analysis Techniques", "Bob", "Data Analysis", "Hall B", "Afternoon"),
+    Session("Advanced AI Applications", "Charlie", "AI", "Hall A", "Evening"),
+    Session("Big Data Storage Solutions", "Alice", "Data Storage", "Hall B", "Morning, Afternoon"),
+]
+
+available_rooms = {"Morning": "Hall A", "Afternoon": "Hall B", "Evening": "Hall C"}
+
+def has_conflict(session1, session2):
+    return (session1.topic == session2.topic or
+            session1.room == session2.room or
+            session1.speaker == session2.speaker)
+
+def is_available(session, time_slot, available_rooms):
+    return available_rooms.get(time_slot) == session.room
+
+def schedule_sessions(sessions, available_rooms):
+    for session in sessions:
+        for slot in session.preferred_slot.split(', '):
+            if is_available(session, slot, available_rooms):
+                if not any(has_conflict(session, other_session) for other_session in sessions if other_session.assigned_slot == slot):
+                    session.assigned_slot = slot
+                    available_rooms[slot] = None  # Mark room as unavailable
+                    break
+        if not session.assigned_slot:
+            print(f"no schedule : {session.name}")
+
+
+def schedule(sessions):
+    print("Schedule:")
+    for session in sessions:
+        if session.assigned_slot:
+            print(f"{session.name}: {session.assigned_slot} ({session.room})")
+        else:
+            print(f"{session.name}: not scheduled")
+
+schedule_sessions(sessions, available_rooms)
+print(schedule(sessions))
